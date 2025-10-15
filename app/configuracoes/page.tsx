@@ -8,39 +8,66 @@ import { Button } from "@/components/ui/button";
 import { Save } from "lucide-react";
 import { User } from "@/entities/User";
 
+type Metas = {
+  meta_diaria: number;
+  meta_semanal: number;
+  meta_mensal: number;
+};
+
+type Acessos = {
+  [modulo: string]: boolean;
+};
+
+type Configuracoes = {
+  metas: Metas;
+  acessos: Acessos;
+};
+
+type Usuario = {
+  configuracoes: Configuracoes;
+};
+
 export default function ConfiguracoesPage() {
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<Usuario | null>(null);
 
   useEffect(() => {
     (async () => {
-      const data = await User.me();
+      const data = (await User.me()) as Usuario;
       setUser(data);
     })();
   }, []);
 
   if (!user) return null;
 
-  const handleMetaChange = (field: string, value: number) => {
-    setUser((prev: any) => ({
-      ...prev,
-      configuracoes: {
-        ...prev.configuracoes,
-        metas: { ...prev.configuracoes.metas, [field]: value },
-      },
-    }));
+  const handleMetaChange = (field: keyof Metas, value: number) => {
+    setUser((prev) =>
+      prev
+        ? {
+            ...prev,
+            configuracoes: {
+              ...prev.configuracoes,
+              metas: { ...prev.configuracoes.metas, [field]: value },
+            },
+          }
+        : prev
+    );
   };
 
   const handleAcessoChange = (modulo: string) => {
-    setUser((prev: any) => ({
-      ...prev,
-      configuracoes: {
-        ...prev.configuracoes,
-        acessos: {
-          ...prev.configuracoes.acessos,
-          [modulo]: !prev.configuracoes.acessos[modulo],
-        },
-      },
-    }));
+    setUser((prev) =>
+      prev
+        ? {
+            ...prev,
+            configuracoes: {
+              ...prev.configuracoes,
+              acessos: {
+                ...prev.configuracoes.acessos,
+                [modulo]: !prev.configuracoes.acessos[modulo],
+              },
+            },
+          }
+        : prev
+    );
   };
 
   const salvar = async () => {
