@@ -1,103 +1,149 @@
-import Image from "next/image";
+"use client";
+
+import {
+  ResponsiveContainer,
+  PieChart,
+  Pie,
+  Cell,
+  BarChart,
+  Bar,
+  XAxis,
+  Tooltip,
+  CartesianGrid,
+} from "recharts";
+import { useState } from "react";
+import { GlassCard } from "@/components/shared/GlassCard";
+import { Progress } from "@/components/ui/progress";
+import { DollarSign, Users, CheckCircle, TrendingUp, AlertTriangle } from "lucide-react";
 
 export default function Home() {
-  return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  const [projetosAtivos] = useState(3);
+  const [valorTotal] = useState(15000);
+  const [valorRecebido] = useState(7200);
+  const [metaMensal] = useState(5000);
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+  const progresso = Math.min((valorRecebido / metaMensal) * 100, 100);
+
+  const COLORS = ["#facc15", "#1f1f1f"];
+
+  const statusData = [
+    { name: "Em produção", value: 80 },
+    { name: "Enviados", value: 65 },
+    { name: "Aguardando aprovação", value: 45 },
+    { name: "Em ajustes", value: 25 },
+  ];
+
+  const barData = [
+    { name: "Produção", valor: 80 },
+    { name: "Enviados", valor: 65 },
+    { name: "Aprovação", valor: 45 },
+    { name: "Ajustes", valor: 25 },
+  ];
+
+  return (
+    <div className="space-y-10 text-white w-full">
+      {/* Header */}
+      <header className="flex flex-col">
+        <h1 className="text-4xl font-bold">Beshboard</h1>
+        <p className="text-gray-400 text-lg">
+          Bem-vindo, <span className="text-yellow-400 font-semibold">Arthur 👋</span>
+        </p>
+      </header>
+
+      {/* Cards principais */}
+      <section className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <GlassCard title="Projetos Ativos" icon={CheckCircle} gradient="from-yellow-500 to-amber-600">
+          <p className="text-3xl font-bold mt-2 text-yellow-400">{projetosAtivos}</p>
+        </GlassCard>
+
+        <GlassCard title="Valor Total" icon={DollarSign} gradient="from-green-500 to-emerald-600">
+          <p className="text-3xl font-bold mt-2 text-green-400">
+            R$ {valorTotal.toLocaleString("pt-BR")}
+          </p>
+        </GlassCard>
+
+        <GlassCard title="Valor Recebido" icon={DollarSign} gradient="from-blue-500 to-cyan-600">
+          <p className="text-3xl font-bold mt-2 text-blue-400">
+            R$ {valorRecebido.toLocaleString("pt-BR")}
+          </p>
+        </GlassCard>
+      </section>
+
+      {/* Linha intermediária */}
+      <section className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Progresso circular */}
+        <GlassCard
+          title="Meta Mensal"
+          icon={TrendingUp}
+          gradient="from-yellow-500 to-amber-600"
+        >
+          <div className="flex items-center justify-center h-48">
+            <ResponsiveContainer width="80%" height="100%">
+              <PieChart>
+                <Pie
+                  data={[
+                    { name: "Progresso", value: progresso },
+                    { name: "Restante", value: 100 - progresso },
+                  ]}
+                  innerRadius={60}
+                  outerRadius={80}
+                  paddingAngle={4}
+                  dataKey="value"
+                >
+                  {COLORS.map((color, index) => (
+                    <Cell key={`cell-${index}`} fill={color} />
+                  ))}
+                </Pie>
+              </PieChart>
+            </ResponsiveContainer>
+            <div className="absolute flex flex-col items-center">
+              <span className="text-3xl font-bold text-yellow-400">{progresso.toFixed(0)}%</span>
+              <span className="text-gray-400 text-sm mt-1">
+                R$ {valorRecebido.toLocaleString("pt-BR")} de R$ {metaMensal.toLocaleString("pt-BR")}
+              </span>
+            </div>
+          </div>
+        </GlassCard>
+
+        {/* Clientes mais rentáveis */}
+        <GlassCard title="Clientes Mais Rentáveis" icon={Users} gradient="from-blue-500 to-cyan-600">
+          <ul className="text-gray-300 text-sm space-y-2 mt-3">
+            <li>
+              <span className="text-yellow-400 font-medium">Silve</span> — Silva & Associados
+            </li>
+            <li>TechStartup</li>
+            <li>Pedro Costa</li>
+          </ul>
+        </GlassCard>
+
+        {/* Alertas de prazos */}
+        <GlassCard title="Alertas de Prazos" icon={AlertTriangle} gradient="from-red-500 to-orange-600">
+          <ul className="text-gray-300 text-sm space-y-2 mt-3">
+            <li>📅 Silva & Associados — <span className="text-red-400">2 dias atrasado</span></li>
+            <li>🕐 AS Event — <span className="text-yellow-400">3 dias para entrega</span></li>
+          </ul>
+        </GlassCard>
+      </section>
+
+      {/* Status das entregas */}
+      <GlassCard title="Status das Entregas" gradient="from-gray-700 to-gray-800">
+        <div className="h-64">
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart data={barData}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#2a2a2a" />
+              <XAxis dataKey="name" stroke="#aaa" />
+              <Tooltip
+                contentStyle={{
+                  backgroundColor: "#1a1a1f",
+                  border: "1px solid #333",
+                  borderRadius: "8px",
+                }}
+              />
+              <Bar dataKey="valor" fill="#facc15" radius={[8, 8, 0, 0]} />
+            </BarChart>
+          </ResponsiveContainer>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+      </GlassCard>
     </div>
   );
 }
