@@ -1,149 +1,105 @@
 "use client";
 
-import {
-  ResponsiveContainer,
-  PieChart,
-  Pie,
-  Cell,
-  BarChart,
-  Bar,
-  XAxis,
-  Tooltip,
-  CartesianGrid,
-} from "recharts";
-import { useState } from "react";
-import { GlassCard } from "@/components/shared/GlassCard";
-import { Progress } from "@/components/ui/progress";
-import { DollarSign, Users, CheckCircle, TrendingUp, AlertTriangle } from "lucide-react";
+import { useRef, useState } from "react";
 
-export default function Home() {
-  const [projetosAtivos] = useState(3);
-  const [valorTotal] = useState(15000);
-  const [valorRecebido] = useState(7200);
-  const [metaMensal] = useState(5000);
+export default function Login() {
+  const cardRef = useRef<HTMLDivElement>(null);
+  const [email, setEmail] = useState("admin");
+  const [senha, setSenha] = useState("admin");
+  const [erro, setErro] = useState("");
 
-  const progresso = Math.min((valorRecebido / metaMensal) * 100, 100);
+  // Tilt 3D leve no card
+  const handleMove = (e: React.MouseEvent) => {
+    const el = cardRef.current;
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    const x = e.clientX - rect.left; // 0 -> w
+    const y = e.clientY - rect.top;  // 0 -> h
+    const rx = ((y / rect.height) - 0.5) * -6; // rotação X
+    const ry = ((x / rect.width) - 0.5) * 6; // rotação Y
+    el.style.transform = `rotateX(${rx}deg) rotateY(${ry}deg) translateZ(0)`;
+  };
+  const resetTilt = () => {
+    const el = cardRef.current;
+    if (el) el.style.transform = "rotateX(0deg) rotateY(0deg)";
+  };
 
-  const COLORS = ["#facc15", "#1f1f1f"];
-
-  const statusData = [
-    { name: "Em produção", value: 80 },
-    { name: "Enviados", value: 65 },
-    { name: "Aguardando aprovação", value: 45 },
-    { name: "Em ajustes", value: 25 },
-  ];
-
-  const barData = [
-    { name: "Produção", valor: 80 },
-    { name: "Enviados", valor: 65 },
-    { name: "Aprovação", valor: 45 },
-    { name: "Ajustes", valor: 25 },
-  ];
+  const onSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setErro("");
+    if (!email || !senha) {
+      setErro("Preencha e-mail e senha para continuar.");
+      return;
+    }
+    // apenas visual
+  };
 
   return (
-    <div className="space-y-10 text-white w-full">
-      {/* Header */}
-      <header className="flex flex-col">
-        <h1 className="text-4xl font-bold">Beshboard</h1>
-        <p className="text-gray-400 text-lg">
-          Bem-vindo, <span className="text-yellow-400 font-semibold">Arthur 👋</span>
-        </p>
-      </header>
-
-      {/* Cards principais */}
-      <section className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <GlassCard title="Projetos Ativos" icon={CheckCircle} gradient="from-yellow-500 to-amber-600">
-          <p className="text-3xl font-bold mt-2 text-yellow-400">{projetosAtivos}</p>
-        </GlassCard>
-
-        <GlassCard title="Valor Total" icon={DollarSign} gradient="from-green-500 to-emerald-600">
-          <p className="text-3xl font-bold mt-2 text-green-400">
-            R$ {valorTotal.toLocaleString("pt-BR")}
-          </p>
-        </GlassCard>
-
-        <GlassCard title="Valor Recebido" icon={DollarSign} gradient="from-blue-500 to-cyan-600">
-          <p className="text-3xl font-bold mt-2 text-blue-400">
-            R$ {valorRecebido.toLocaleString("pt-BR")}
-          </p>
-        </GlassCard>
-      </section>
-
-      {/* Linha intermediária */}
-      <section className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Progresso circular */}
-        <GlassCard
-          title="Meta Mensal"
-          icon={TrendingUp}
-          gradient="from-yellow-500 to-amber-600"
-        >
-          <div className="flex items-center justify-center h-48">
-            <ResponsiveContainer width="80%" height="100%">
-              <PieChart>
-                <Pie
-                  data={[
-                    { name: "Progresso", value: progresso },
-                    { name: "Restante", value: 100 - progresso },
-                  ]}
-                  innerRadius={60}
-                  outerRadius={80}
-                  paddingAngle={4}
-                  dataKey="value"
-                >
-                  {COLORS.map((color, index) => (
-                    <Cell key={`cell-${index}`} fill={color} />
-                  ))}
-                </Pie>
-              </PieChart>
-            </ResponsiveContainer>
-            <div className="absolute flex flex-col items-center">
-              <span className="text-3xl font-bold text-yellow-400">{progresso.toFixed(0)}%</span>
-              <span className="text-gray-400 text-sm mt-1">
-                R$ {valorRecebido.toLocaleString("pt-BR")} de R$ {metaMensal.toLocaleString("pt-BR")}
-              </span>
-            </div>
+    <main className="min-h-screen w-full flex items-center justify-center p-6">
+      <section
+        ref={cardRef}
+        onMouseMove={handleMove}
+        onMouseLeave={resetTilt}
+        className="neo-card w-[min(520px,94vw)] p-8 transition-transform duration-150 will-change-transform"
+        style={{ perspective: "1200px" } as any}
+      >
+        {/* LOGO HERO */}
+        <div className="logo-hero mb-6">
+          <div className="ring-holo" />
+          <div className="ring-dash" />
+          <div className="scan" />
+          <div className="core">
+            <img src="/logo.png" alt="Logo da empresa" draggable={false} />
           </div>
-        </GlassCard>
-
-        {/* Clientes mais rentáveis */}
-        <GlassCard title="Clientes Mais Rentáveis" icon={Users} gradient="from-blue-500 to-cyan-600">
-          <ul className="text-gray-300 text-sm space-y-2 mt-3">
-            <li>
-              <span className="text-yellow-400 font-medium">Silve</span> — Silva & Associados
-            </li>
-            <li>TechStartup</li>
-            <li>Pedro Costa</li>
-          </ul>
-        </GlassCard>
-
-        {/* Alertas de prazos */}
-        <GlassCard title="Alertas de Prazos" icon={AlertTriangle} gradient="from-red-500 to-orange-600">
-          <ul className="text-gray-300 text-sm space-y-2 mt-3">
-            <li>📅 Silva & Associados — <span className="text-red-400">2 dias atrasado</span></li>
-            <li>🕐 AS Event — <span className="text-yellow-400">3 dias para entrega</span></li>
-          </ul>
-        </GlassCard>
-      </section>
-
-      {/* Status das entregas */}
-      <GlassCard title="Status das Entregas" gradient="from-gray-700 to-gray-800">
-        <div className="h-64">
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={barData}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#2a2a2a" />
-              <XAxis dataKey="name" stroke="#aaa" />
-              <Tooltip
-                contentStyle={{
-                  backgroundColor: "#1a1a1f",
-                  border: "1px solid #333",
-                  borderRadius: "8px",
-                }}
-              />
-              <Bar dataKey="valor" fill="#facc15" radius={[8, 8, 0, 0]} />
-            </BarChart>
-          </ResponsiveContainer>
         </div>
-      </GlassCard>
-    </div>
+
+        {/* Título */}
+        <header className="text-center mb-6">
+          <h1 className="h1-grad text-3xl font-extrabold">Bem-vindo</h1>
+          <p className="text-muted text-sm mt-1">Acesse sua conta</p>
+        </header>
+
+        {/* Credenciais de teste */}
+        <div className="text-center text-xs mb-5">
+          <span className="badge-demo">Usuário: <b>admin</b></span>
+          <span className="mx-2 opacity-40">•</span>
+          <span className="badge-demo">Senha: <b>admin</b></span>
+        </div>
+
+        {/* Formulário */}
+        <form onSubmit={onSubmit} className="space-y-4">
+          <div className="space-y-1">
+            <label className="text-sm">E-mail</label>
+            <input
+              className="input"
+              type="email"
+              placeholder="seu@email.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </div>
+
+          <div className="space-y-1">
+            <label className="text-sm">Senha</label>
+            <input
+              className="input"
+              type="password"
+              placeholder="••••••••"
+              value={senha}
+              onChange={(e) => setSenha(e.target.value)}
+            />
+          </div>
+
+          {erro && <p className="text-sm text-red-400">{erro}</p>}
+
+          <button type="submit" className="btn-amber">Entrar</button>
+        </form>
+
+        {/* Rodapé */}
+        <p className="text-center text-xs text-muted mt-6">
+          © {new Date().getFullYear()} Designer Workflow
+        </p>
+      </section>
+    </main>
   );
 }
