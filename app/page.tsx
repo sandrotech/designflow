@@ -1,14 +1,19 @@
+// app/page.tsx
 "use client";
 
 import { useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function Login() {
+  const router = useRouter();
   const cardRef = useRef<HTMLDivElement>(null);
-  const [email, setEmail] = useState("admin");
+
+  // Pré-preenchido para testes (admin / admin)
+  const [usuario, setUsuario] = useState("admin");
   const [senha, setSenha] = useState("admin");
   const [erro, setErro] = useState("");
 
-  // Tilt 3D leve no card
+  // Tilt 3D leve no card (opcional; combina com o visual futurista)
   const handleMove = (e: React.MouseEvent) => {
     const el = cardRef.current;
     if (!el) return;
@@ -16,8 +21,8 @@ export default function Login() {
     const x = e.clientX - rect.left; // 0 -> w
     const y = e.clientY - rect.top;  // 0 -> h
     const rx = ((y / rect.height) - 0.5) * -6; // rotação X
-    const ry = ((x / rect.width) - 0.5) * 6; // rotação Y
-    el.style.transform = `rotateX(${rx}deg) rotateY(${ry}deg) translateZ(0)`;
+    const ry = ((x / rect.width)  - 0.5) *  6; // rotação Y
+    el.style.transform = `rotateX(${rx}deg) rotateY(${ry}deg)`;
   };
   const resetTilt = () => {
     const el = cardRef.current;
@@ -27,11 +32,19 @@ export default function Login() {
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setErro("");
-    if (!email || !senha) {
-      setErro("Preencha e-mail e senha para continuar.");
+
+    if (!usuario || !senha) {
+      setErro("Preencha usuário e senha para continuar.");
       return;
     }
-    // apenas visual
+
+    if (usuario === "admin" && senha === "admin") {
+      // Simula sessão
+      localStorage.setItem("userLogged", "true");
+      router.push("/dashboard");
+    } else {
+      setErro("Usuário ou senha incorretos. Dica de teste: admin / admin");
+    }
   };
 
   return (
@@ -43,7 +56,7 @@ export default function Login() {
         className="neo-card w-[min(520px,94vw)] p-8 transition-transform duration-150 will-change-transform"
         style={{ perspective: "1200px" } as any}
       >
-        {/* LOGO HERO */}
+        {/* LOGO em destaque (use /public/logo.png) */}
         <div className="logo-hero mb-6">
           <div className="ring-holo" />
           <div className="ring-dash" />
@@ -59,7 +72,7 @@ export default function Login() {
           <p className="text-muted text-sm mt-1">Acesse sua conta</p>
         </header>
 
-        {/* Credenciais de teste */}
+        {/* Credenciais de teste visíveis */}
         <div className="text-center text-xs mb-5">
           <span className="badge-demo">Usuário: <b>admin</b></span>
           <span className="mx-2 opacity-40">•</span>
@@ -69,13 +82,13 @@ export default function Login() {
         {/* Formulário */}
         <form onSubmit={onSubmit} className="space-y-4">
           <div className="space-y-1">
-            <label className="text-sm">E-mail</label>
+            <label className="text-sm">Usuário</label>
             <input
               className="input"
-              type="email"
-              placeholder="seu@email.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              type="text"
+              placeholder="admin"
+              value={usuario}
+              onChange={(e) => setUsuario(e.target.value)}
             />
           </div>
 
@@ -84,7 +97,7 @@ export default function Login() {
             <input
               className="input"
               type="password"
-              placeholder="••••••••"
+              placeholder="admin"
               value={senha}
               onChange={(e) => setSenha(e.target.value)}
             />
