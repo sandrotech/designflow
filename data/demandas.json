@@ -1,0 +1,259 @@
+[
+  {
+    "id": 1,
+    "cliente": "Silva & Associados",
+    "titulo": "Campanha Novembro",
+    "descricao": "Criação de arte para campanha Novembro Azul",
+    "status": "Em produção",
+    "prioridade": "Alta",
+    "responsavel": "Marina Costa",
+    "dataCriacao": "2025-10-15",
+    "prazo": "2025-10-30",
+    "anexos": [
+      "briefing.pdf",
+      "referencia.png"
+    ]
+  },
+  {
+    "id": 2,
+    "cliente": "Nova Era Cosméticos",
+    "titulo": "Post Instagram Linha Verão",
+    "descricao": "Pedido de layout para post e stories",
+    "status": "Aguardando aprovação",
+    "prioridade": "Média",
+    "responsavel": "Lucas Andrade",
+    "dataCriacao": "2025-10-17",
+    "prazo": "2025-10-25",
+    "anexos": []
+  },
+  {
+    "id": 3,
+    "cliente": "Loja Mix Fashion",
+    "titulo": "Banner Black Friday",
+    "descricao": "Arte principal para destaque do site",
+    "status": "Pendente",
+    "prioridade": "Alta",
+    "responsavel": "Juliana Ribeiro",
+    "dataCriacao": "2025-10-10",
+    "prazo": "2025-11-01",
+    "anexos": [
+      "banner_ref.jpg"
+    ]
+  },
+  {
+    "id": 4,
+    "cliente": "Restaurante Sabor da Casa",
+    "titulo": "Cardápio Digital Novembro",
+    "descricao": "Atualização de cardápio e fotos de produtos",
+    "status": "Em produção",
+    "prioridade": "Média",
+    "responsavel": "Pedro Nogueira",
+    "dataCriacao": "2025-10-12",
+    "prazo": "2025-10-28",
+    "anexos": []
+  },
+  {
+    "id": 5,
+    "cliente": "Academia Corpo Ativo",
+    "titulo": "Campanha Plano Black",
+    "descricao": "Criação de campanha promocional de novembro",
+    "status": "Aprovada",
+    "prioridade": "Alta",
+    "responsavel": "Carla Martins",
+    "dataCriacao": "2025-10-14",
+    "prazo": "2025-11-10",
+    "anexos": [
+      "briefing_black.pdf"
+    ]
+  },
+  {
+    "id": 6,
+    "cliente": "Supermercado Cometa",
+    "titulo": "Campanha Fim de Ano",
+    "descricao": "Criação de peças para natal e réveillon",
+    "status": "Em produção",
+    "prioridade": "Alta",
+    "responsavel": "Rafael Gomes",
+    "dataCriacao": "2025-10-18",
+    "prazo": "2025-12-15",
+    "anexos": []
+  },
+  {
+    "id": 7,
+    "cliente": "Padaria Santa Cecília",
+    "titulo": "Natal Doce",
+    "descricao": "Fotos e posts para linha de panetones",
+    "status": "Pendente",
+    "prioridade": "Média",
+    "responsavel": "Laura Fernandes",
+    "dataCriacao": "2025-10-20",
+    "prazo": "2025-11-20",
+    "anexos": [
+      "doces.png"
+    ]
+  },
+  {
+    "id": 8,
+    "cliente": "Farmácia Bem Estar",
+    "titulo": "Campanha Saúde em Dia",
+    "descricao": "Design de post e carrossel educativo",
+    "status": "Aprovada",
+    "prioridade": "Baixa",
+    "responsavel": "Ricardo Tavares",
+    "dataCriacao": "2025-10-21",
+    "prazo": "2025-11-02",
+    "anexos": []
+  },
+  {
+    "id": 9,
+    "cliente": "Auto Center Roda Livre",
+    "titulo": "Post Promoção de Alinhamento",
+    "descricao": "Arte para redes sociais com foco em descontos",
+    "status": "Em produção",
+    "prioridade": "Média",
+    "responsavel": "Bruna Souza",
+    "dataCriacao": "2025-10-23",
+    "prazo": "2025-11-03",
+    "anexos": [
+      "alinhamento.jpg"
+    ]
+  },
+  {
+    "id": 10,
+    "cliente": "Colégio Horizonte",
+    "titulo": "Matrículas 2026",
+    "descricao": "Campanha para redes sociais e outdoor",
+    "status": "Aguardando aprovação",
+    "prioridade": "Alta",
+    "responsavel": "Henrique Lima",
+    "dataCriacao": "2025-10-19",
+    "prazo": "2025-11-12",
+    "anexos": [
+      "roteiro.docx"
+    ]
+  },
+  {
+    "id": 11,
+    "cliente": "Clínica VivaBem",
+    "titulo": "Campanha Check-up de Verão",
+    "descricao": "Design para mídia impressa e digital",
+    "status": "Pendente",
+    "prioridade": "Alta",
+    "responsavel": "Fernanda Castro",
+    "dataCriacao": "2025-10-22",
+    "prazo": "2025-11-05",
+    "anexos": []
+  },
+  {
+    "id": 12,
+    "cliente": "Mercadinho Popular",
+    "titulo": "Folder de Ofertas Semanais",
+    "descricao": "Criação de layout para impressos",
+    "status": "Em produção",
+    "prioridade": "Baixa",
+    "responsavel": "João Almeida",
+    "dataCriacao": "2025-10-25",
+    "prazo": "2025-11-09",
+    "anexos": []
+  },
+  {
+    "id": 13,
+    "cliente": "PetShop Amigo Fiel",
+    "titulo": "Campanha Cuide Bem",
+    "descricao": "Criação de carrossel e reels sobre cuidados com pets",
+    "status": "Aprovada",
+    "prioridade": "Média",
+    "responsavel": "Camila Duarte",
+    "dataCriacao": "2025-10-27",
+    "prazo": "2025-11-15",
+    "anexos": []
+  },
+  {
+    "id": 14,
+    "cliente": "Agência Cria+",
+    "titulo": "Revisão de Identidade Visual",
+    "descricao": "Atualização de logotipo e manual da marca",
+    "status": "Em produção",
+    "prioridade": "Alta",
+    "responsavel": "Diego Barros",
+    "dataCriacao": "2025-10-26",
+    "prazo": "2025-11-22",
+    "anexos": [
+      "mockup_logo.png"
+    ]
+  },
+  {
+    "id": 15,
+    "cliente": "Studio Wave",
+    "titulo": "Pacote Social Media Novembro",
+    "descricao": "Criação de 10 posts e 5 stories mensais",
+    "status": "Aguardando aprovação",
+    "prioridade": "Média",
+    "responsavel": "Caroline Brito",
+    "dataCriacao": "2025-10-29",
+    "prazo": "2025-11-25",
+    "anexos": []
+  },
+  {
+    "id": 16,
+    "cliente": "Hospital Vida Nova",
+    "titulo": "Campanha Doação de Sangue",
+    "descricao": "Design de outdoor e material digital",
+    "status": "Pendente",
+    "prioridade": "Alta",
+    "responsavel": "Gustavo Melo",
+    "dataCriacao": "2025-10-30",
+    "prazo": "2025-11-30",
+    "anexos": [
+      "briefing.pdf"
+    ]
+  },
+  {
+    "id": 17,
+    "cliente": "Loja Kids Mundo",
+    "titulo": "Campanha Dia das Crianças (Repostagem)",
+    "descricao": "Criação de layout comemorativo",
+    "status": "Aprovada",
+    "prioridade": "Baixa",
+    "responsavel": "Amanda Rocha",
+    "dataCriacao": "2025-10-05",
+    "prazo": "2025-10-27",
+    "anexos": []
+  },
+  {
+    "id": 18,
+    "cliente": "Pizzaria Massa Fina",
+    "titulo": "Aniversário da Loja",
+    "descricao": "Criação de campanha com desconto e sorteio",
+    "status": "Em produção",
+    "prioridade": "Média",
+    "responsavel": "Renato Silva",
+    "dataCriacao": "2025-10-09",
+    "prazo": "2025-11-18",
+    "anexos": []
+  },
+  {
+    "id": 19,
+    "cliente": "Distribuidora JSG",
+    "titulo": "Campanha de Bebidas Verão",
+    "descricao": "Criação de arte para catálogo e mídias sociais",
+    "status": "Aguardando aprovação",
+    "prioridade": "Alta",
+    "responsavel": "Bianca Ramos",
+    "dataCriacao": "2025-10-11",
+    "prazo": "2025-12-05",
+    "anexos": []
+  },
+  {
+    "id": 20,
+    "cliente": "Escola ABC",
+    "titulo": "Campanha de Volta às Aulas",
+    "descricao": "Materiais para redes sociais e fachada",
+    "status": "Pendente",
+    "prioridade": "Alta",
+    "responsavel": "Marcelo Vieira",
+    "dataCriacao": "2025-10-13",
+    "prazo": "2025-12-10",
+    "anexos": []
+  }
+]

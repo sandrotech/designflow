@@ -1,69 +1,46 @@
 "use client";
 
-import { useState } from "react";
-import { GlassCard } from "@/components/shared/GlassCard";
-import { Tarefa } from "@/entities/Tarefa";
-import { TarefaCard } from "@/components/tarefas/TarefaCard";
-import { NovaTarefaModal } from "@/components/tarefas/NovaTarefaModal";
-import { HistoricoModal } from "@/components/tarefas/HistoricoModal";
-import { Plus } from "lucide-react";
-import { Button } from "@/components/ui/button";
+const COLS = [
+  { key: "backlog", title: "Backlog" },
+  { key: "producao", title: "Produção" },
+  { key: "aprovacao", title: "Aprovação" },
+  { key: "pronto", title: "Pronto" },
+];
+
+const CARDS = {
+  backlog: ["Explorar referências", "Definir paleta do cliente X"],
+  producao: ["Layout da landing", "Roteiro de vídeo"],
+  aprovacao: ["Manual de marca v1"],
+  pronto: ["Logo finalizado", "Posts aprovados"],
+} as Record<string, string[]>;
 
 export default function TarefasPage() {
-  const [tarefas, setTarefas] = useState<Tarefa[]>([]);
-  const [modalNova, setModalNova] = useState(false);
-  const [modalHistorico, setModalHistorico] = useState(false);
-  const [tarefaSelecionada, setTarefaSelecionada] = useState<Tarefa | null>(null);
-
-  const handleNovaTarefa = (t: Tarefa) => {
-    const nova = { ...t, id: String(Date.now()) };
-    setTarefas((prev) => [nova, ...prev]);
-  };
-
   return (
-    <div className="space-y-6 text-white">
-      <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-400">
-          Minhas Tarefas
-        </h1>
-        <Button
-          onClick={() => setModalNova(true)}
-          className="button-glow flex items-center gap-2"
-        >
-          <Plus className="w-4 h-4" /> Nova Tarefa
-        </Button>
+    <div className="max-w-[1400px] mx-auto">
+      <h1 className="text-2xl md:text-3xl font-extrabold bg-gradient-to-r from-yellow-400 to-amber-300 bg-clip-text text-transparent mb-6">
+        Tarefas
+      </h1>
+
+      <div className="grid md:grid-cols-4 gap-4">
+        {COLS.map((col) => (
+          <div key={col.key} className="glass-card border border-amber-200/10 p-3">
+            <div className="flex items-center justify-between mb-3">
+              <p className="text-sm font-semibold">{col.title}</p>
+              <span className="text-xs text-gray-400">{CARDS[col.key].length}</span>
+            </div>
+            <div className="space-y-3">
+              {CARDS[col.key].map((t) => (
+                <div key={t} className="p-3 rounded-lg bg-white/5 border border-white/10 text-sm">
+                  {t}
+                </div>
+              ))}
+              <button className="w-full text-xs px-3 py-2 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10">
+                Nova tarefa
+              </button>
+            </div>
+          </div>
+        ))}
       </div>
-
-      <GlassCard title="Tarefas em andamento" gradient="from-blue-600 to-purple-600">
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {tarefas.length > 0 ? (
-            tarefas.map((t) => (
-              <TarefaCard
-                key={t.id}
-                tarefa={t}
-                onClick={() => {
-                  setTarefaSelecionada(t);
-                  setModalHistorico(true);
-                }}
-              />
-            ))
-          ) : (
-            <p className="text-sm text-gray-400">Nenhuma tarefa criada ainda.</p>
-          )}
-        </div>
-      </GlassCard>
-
-      <NovaTarefaModal
-        open={modalNova}
-        onClose={() => setModalNova(false)}
-        onCreate={handleNovaTarefa}
-      />
-
-      <HistoricoModal
-        open={modalHistorico}
-        onClose={() => setModalHistorico(false)}
-        tarefa={tarefaSelecionada}
-      />
     </div>
   );
 }

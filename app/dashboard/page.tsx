@@ -1,104 +1,207 @@
+"use client";
+
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import {
+  CalendarDays,
+  Users,
+  FolderKanban,
+  ClipboardList,
+  FileText,
+} from "lucide-react";
+
+/**
+ * Dashboard responsivo e minimalista (modelo Aprova Aí + visual DesignFlow)
+ * - Container fixo (max 1200px) + xl:pr-28 (reserva do Dock)
+ * - Grids com min-w-0 e overflow-x-hidden no layout => sem quebra
+ * - Hierarquia clara: header, métricas, agenda+clientes, demandas recentes
+ */
+type Cliente = { id?: string | number; nome: string; email?: string };
+
 export default function DashboardPage() {
+  const [clientes, setClientes] = useState<Cliente[]>([]);
+  const [loadingClientes, setLoadingClientes] = useState(true);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const res = await fetch("/api/clientes", { cache: "no-store" });
+        if (res.ok) {
+          const data = await res.json();
+          setClientes(Array.isArray(data) ? data : []);
+        }
+      } catch (e) {
+        console.error("Erro ao carregar clientes:", e);
+      } finally {
+        setLoadingClientes(false);
+      }
+    })();
+  }, []);
+
   return (
-    <div className="max-w-[1400px] mx-auto px-6 sm:px-10 md:px-16 lg:px-20 xl:px-24 pt-6 pb-24">
-      {/* Hero */}
-{/* Hero futurista */}
-<section className="relative text-center mb-12">
-  {/* Linha sutil decorativa por trás */}
-  <div className="absolute left-1/2 -translate-x-1/2 top-1/2 w-[260px] h-[2px] bg-gradient-to-r from-transparent via-amber-400/40 to-transparent blur-[1px]" />
-
-  {/* Título */}
-  <h1
-    className="
-      text-4xl md:text-5xl font-extrabold tracking-tight relative z-10
-      bg-gradient-to-r from-amber-300 via-yellow-400 to-amber-300
-      bg-clip-text text-transparent animate-gradient-x
-      drop-shadow-[0_0_15px_rgba(250,204,21,0.4)]
-    "
-    style={{
-      WebkitTextStroke: "1px rgba(250,204,21,0.15)",
-    }}
-  >
-    <span className="inline-block mr-2">Bem-vindo de volta</span>
-    <span className="inline-block animate-pulse">👋</span>
-  </h1>
-
-  {/* Subtítulo */}
-  <p className="text-sm text-gray-400 mt-3 max-w-[540px] mx-auto leading-relaxed">
-    Acompanhe seus números, metas e módulos em tempo real.
-  </p>
-</section>
-
-      {/* KPIs */}
-      <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
-        {[
-          { t: "Projetos ativos", v: "03" },
-          { t: "Faturamento (mês)", v: "R$ 7.200" },
-          { t: "Tarefas em aprovação", v: "08" },
-          { t: "Pendências (cliente)", v: "02" },
-        ].map((k) => (
-          <div
-            key={k.t}
-            className="glass-card p-5 text-center border border-amber-200/10 hover:border-amber-300/30 transition"
-          >
-            <p className="text-[13px] text-gray-400">{k.t}</p>
-            <p className="mt-1 text-xl font-semibold text-amber-300">{k.v}</p>
-          </div>
-        ))}
+    <div className="text-gray-100">
+      {/* Header */}
+      <section className="border-b border-amber-400/10 bg-amber-400/5/50 backdrop-blur-sm">
+        <div className="neo-container px-4 sm:px-6 lg:px-8 xl:pr-28 py-6">
+          <h1 className="text-3xl sm:text-4xl font-extrabold text-amber-300 drop-shadow-[0_0_8px_rgba(250,204,21,0.35)]">
+            Overview de Demandas
+          </h1>
+          <p className="text-sm sm:text-base text-gray-400 mt-1">
+            Visão geral dos jobs, clientes e prazos.
+          </p>
+        </div>
       </section>
 
-      {/* Ações rápidas */}
-      <section className="glass-card p-6 border border-amber-200/10 mb-10">
-        <div className="flex items-center justify-between flex-wrap gap-3 mb-4">
-          <h2 className="text-base font-semibold">Ações rápidas</h2>
-          <div className="flex gap-2">
-            <button className="px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-xs text-gray-100 transition">Criar projeto</button>
-            <button className="px-3 py-1.5 rounded-lg bg-amber-400/20 hover:bg-amber-400/25 text-xs text-amber-200 border border-amber-300/40 transition">Nova tarefa</button>
-          </div>
-        </div>
-
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      {/* Conteúdo */}
+      <div className="neo-container px-4 sm:px-6 lg:px-8 xl:pr-28 py-8 space-y-8">
+        {/* Métricas */}
+        <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 lg:gap-6 min-w-0">
           {[
-            { t: "Novo cliente", d: "Cadastre um cliente" },
-            { t: "Criar proposta", d: "Gere uma proposta visual" },
-            { t: "Upload de materiais", d: "Envie logos e guias" },
-            { t: "Abrir tarefas", d: "Gerencie demandas" },
-            { t: "Relatórios", d: "Veja desempenho" },
-            { t: "Configurações", d: "Metas e permissões" },
-          ].map((x) => (
-            <button
-              key={x.t}
-              className="text-left p-4 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 transition group"
+            { label: "Demandas pendentes", value: 4, icon: FolderKanban },
+            { label: "Tarefas em andamento", value: 8, icon: ClipboardList },
+            { label: "Clientes cadastrados", value: clientes.length, icon: Users },
+            { label: "Projetos finalizados", value: 5, icon: FileText },
+          ].map(({ label, value, icon: Icon }) => (
+            <article
+              key={label}
+              className="min-w-0 rounded-2xl border border-amber-300/10 bg-white/5 backdrop-blur-md p-5 hover:border-amber-300/30 transition-colors"
             >
-              <p className="text-sm font-medium">{x.t}</p>
-              <p className="text-[12px] text-gray-400 mt-0.5">{x.d}</p>
-              <span className="block mt-3 h-px w-0 bg-amber-400/60 group-hover:w-full transition-all" />
-            </button>
-          ))}
-        </div>
-      </section>
-
-      {/* Últimos projetos */}
-      <section className="glass-card p-6 border border-amber-200/10">
-        <h3 className="text-base font-semibold mb-4">Últimos projetos</h3>
-        <div className="divide-y divide-white/10">
-          {[
-            { n: "Campanha Novembro - Silva & Associados", s: "Em produção" },
-            { n: "Identidade Visual - Studio Wave", s: "Aguardando aprovação" },
-            { n: "Pacote Social Media - Agência Cria+", s: "Aprovado" },
-          ].map((p) => (
-            <div key={p.n} className="py-4 flex items-center justify-between">
-              <div className="pr-4">
-                <p className="text-sm font-medium">{p.n}</p>
-                <p className="text-[12px] text-gray-400">Status: {p.s}</p>
+              <div className="flex items-center justify-between gap-3">
+                <p className="text-sm text-gray-400 truncate">{label}</p>
+                <Icon className="w-5 h-5 shrink-0 text-amber-300/70" />
               </div>
-              <button className="text-xs px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 transition">
-                Abrir
-              </button>
-            </div>
+              <p className="mt-2 text-3xl font-bold text-amber-300">{value}</p>
+            </article>
           ))}
-        </div>
-      </section>
+        </section>
+
+        {/* Agenda + Clientes */}
+        <section className="grid grid-cols-1 lg:grid-cols-12 gap-6 min-w-0">
+          {/* Calendário (placeholder) */}
+          <article className="lg:col-span-8 min-w-0 rounded-2xl border border-amber-300/10 bg-white/5 backdrop-blur-md p-6">
+            <header className="flex flex-wrap items-center justify-between gap-3 mb-4">
+              <h2 className="flex items-center gap-2 text-lg font-semibold text-amber-300">
+                <CalendarDays className="w-5 h-5" /> Agenda de Prazos
+              </h2>
+              <div className="flex gap-2">
+                {["Mês", "Semana"].map((v) => (
+                  <button
+                    key={v}
+                    className="px-3 py-1.5 rounded-md border border-white/10 bg-white/5 supports-[hover:hover]:hover:bg-white/10 text-xs sm:text-sm text-gray-300 transition"
+                  >
+                    {v}
+                  </button>
+                ))}
+              </div>
+            </header>
+            <div className="h-[380px] sm:h-[460px] lg:h-[520px] grid place-items-center rounded-xl border border-white/10 bg-zinc-950/60">
+              <p className="text-gray-500 text-sm">📅 O calendário de demandas será exibido aqui</p>
+            </div>
+          </article>
+
+          {/* Clientes – DINÂMICO */}
+          <aside className="lg:col-span-4 min-w-0 rounded-2xl border border-amber-300/10 bg-white/5 backdrop-blur-md p-6 flex flex-col">
+            <h3 className="text-base font-semibold text-amber-300 mb-4">Clientes</h3>
+
+            <div className="flex-1 overflow-y-auto">
+              {loadingClientes ? (
+                <p className="text-sm text-gray-400 text-center mt-10">Carregando clientes...</p>
+              ) : clientes.length === 0 ? (
+                <div className="grid place-items-center text-center h-full">
+                  <p className="text-sm text-gray-400 max-w-[28ch] leading-relaxed">
+                    Nenhum cliente adicionado ainda.
+                  </p>
+                </div>
+              ) : (
+                <ul className="space-y-2">
+                  {clientes.map((c) => (
+                    <li
+                      key={String(c.id ?? c.nome)}
+                      className="p-3 rounded-lg border border-white/10 bg-white/5 hover:bg-white/10 transition flex items-center justify-between"
+                    >
+                      <div className="min-w-0">
+                        <p className="text-sm font-medium text-gray-100 truncate">{c.nome}</p>
+                        {c.email && <p className="text-xs text-gray-400 truncate">{c.email}</p>}
+                      </div>
+                      <Link
+                        href={`/clientes/${c.id ?? ""}`}
+                        className="text-xs text-amber-300 hover:underline"
+                      >
+                        Ver →
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+
+            <Link
+              href="/clientes/novo"
+              className="mt-6 inline-flex items-center justify-center w-full h-10 rounded-lg border border-amber-300/40 bg-amber-400/20 text-amber-200 supports-[hover:hover]:hover:bg-amber-400/30 transition"
+            >
+              + Adicionar Cliente
+            </Link>
+          </aside>
+        </section>
+
+        {/* Demandas recentes */}
+        <section className="min-w-0 rounded-2xl border border-amber-300/10 bg-white/5 backdrop-blur-md p-6">
+          <header className="flex items-center justify-between gap-3 mb-4">
+            <h2 className="text-lg font-semibold text-amber-300">Demandas recentes</h2>
+            <div className="flex gap-2">
+              <Link
+                href="/demandas/nova"
+                className="h-9 px-3 rounded-md border border-amber-300/40 bg-amber-400/20 text-amber-200 supports-[hover:hover]:hover:bg-amber-400/30 transition text-sm grid place-items-center"
+              >
+                + Nova
+              </Link>
+              <Link
+                href="/demandas"
+                className="h-9 px-3 rounded-md border border-white/10 bg-white/5 supports-[hover:hover]:hover:bg-white/10 transition text-sm grid place-items-center text-gray-300"
+              >
+                Ver todas →
+              </Link>
+            </div>
+          </header>
+
+          <div className="divide-y divide-white/10">
+            {[
+              { id: "D-001", cliente: "Agência Cria+", status: "Em produção", prazo: "2025-10-28" },
+              { id: "D-002", cliente: "Silva & Associados", status: "Pendente", prazo: "2025-10-30" },
+              { id: "D-003", cliente: "Studio Wave", status: "Concluída", prazo: "2025-10-15" },
+            ].map((d) => (
+              <div
+                key={d.id}
+                className="py-3 px-2 rounded-md supports-[hover:hover]:hover:bg-white/5 transition"
+              >
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                  <div className="min-w-0">
+                    <p className="text-sm font-medium text-gray-100 truncate">{d.id}</p>
+                    <p className="text-xs text-gray-400 truncate">{d.cliente}</p>
+                  </div>
+                  <div className="flex items-center gap-3 text-xs sm:text-sm shrink-0">
+                    <span
+                      className={`px-2 py-0.5 rounded-md border ${d.status === "Concluída"
+                          ? "border-green-400/30 text-green-300 bg-green-300/10"
+                          : d.status === "Pendente"
+                            ? "border-yellow-400/30 text-yellow-300 bg-yellow-300/10"
+                            : "border-blue-400/30 text-blue-300 bg-blue-300/10"
+                        }`}
+                    >
+                      {d.status}
+                    </span>
+                    <span className="text-gray-400">
+                      {new Date(d.prazo).toLocaleDateString("pt-BR")}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <div className="h-2 xl:h-6" />
+      </div>
     </div>
   );
 }
