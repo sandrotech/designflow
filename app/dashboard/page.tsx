@@ -54,24 +54,46 @@ export default function DashboardPage() {
 
       {/* Conteúdo */}
       <div className="neo-container px-4 sm:px-6 lg:px-8 xl:pr-28 py-8 space-y-8">
-        {/* Métricas */}
+        {/* Métricas (cards clicáveis) */}
         <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 lg:gap-6 min-w-0">
           {[
-            { label: "Demandas pendentes", value: 4, icon: FolderKanban },
-            { label: "Tarefas em andamento", value: 8, icon: ClipboardList },
-            { label: "Clientes cadastrados", value: clientes.length, icon: Users },
-            { label: "Projetos finalizados", value: 5, icon: FileText },
-          ].map(({ label, value, icon: Icon }) => (
-            <article
+            {
+              label: "Demandas pendentes",
+              value: 4,
+              icon: FolderKanban,
+              href: "/demandas?status=pendente",
+            },
+            {
+              label: "Tarefas em andamento",
+              value: 8,
+              icon: ClipboardList,
+              href: "/tarefas?status=andamento",
+            },
+            {
+              label: "Clientes cadastrados",
+              value: clientes.length,
+              icon: Users,
+              href: "/clientes",
+            },
+            {
+              label: "Projetos finalizados",
+              value: 5,
+              icon: FileText,
+              href: "/projetos?status=finalizado",
+            },
+          ].map(({ label, value, icon: Icon, href }) => (
+            <Link
               key={label}
-              className="min-w-0 rounded-2xl border border-amber-300/10 bg-white/5 backdrop-blur-md p-5 hover:border-amber-300/30 transition-colors"
+              href={href}
+              aria-label={`Ir para ${label}`}
+              className="group block min-w-0 rounded-2xl border border-amber-300/10 bg-white/5 backdrop-blur-md p-5 hover:border-amber-300/30 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-300/50"
             >
               <div className="flex items-center justify-between gap-3">
                 <p className="text-sm text-gray-400 truncate">{label}</p>
-                <Icon className="w-5 h-5 shrink-0 text-amber-300/70" />
+                <Icon className="w-5 h-5 shrink-0 text-amber-300/70 group-hover:text-amber-300 transition-colors" />
               </div>
               <p className="mt-2 text-3xl font-bold text-amber-300">{value}</p>
-            </article>
+            </Link>
           ))}
         </section>
 
@@ -181,12 +203,13 @@ export default function DashboardPage() {
                   </div>
                   <div className="flex items-center gap-3 text-xs sm:text-sm shrink-0">
                     <span
-                      className={`px-2 py-0.5 rounded-md border ${d.status === "Concluída"
+                      className={`px-2 py-0.5 rounded-md border ${
+                        d.status === "Concluída"
                           ? "border-green-400/30 text-green-300 bg-green-300/10"
                           : d.status === "Pendente"
-                            ? "border-yellow-400/30 text-yellow-300 bg-yellow-300/10"
-                            : "border-blue-400/30 text-blue-300 bg-blue-300/10"
-                        }`}
+                          ? "border-yellow-400/30 text-yellow-300 bg-yellow-300/10"
+                          : "border-blue-400/30 text-blue-300 bg-blue-300/10"
+                      }`}
                     >
                       {d.status}
                     </span>

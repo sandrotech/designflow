@@ -1,18 +1,23 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useRouter, useParams } from "next/navigation";
 
 const STATUS = ["Briefing", "Planejamento", "Produção", "Aprovação", "Entregue"] as const;
 
-export default function NovoProjetoPage() {
+export default function EditarProjetoPage() {
   const router = useRouter();
+  const params = useParams();
+  const id = params.id as string;
+
   const [saving, setSaving] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [form, setForm] = useState({
+    id: "",
     nome: "",
     cliente: "",
     prazo: "",
-    status: STATUS[0],
+    status: STATUS[0] as (typeof STATUS)[number],
     responsavel: "",
     equipe: "",
     inicio: "",
@@ -23,6 +28,20 @@ export default function NovoProjetoPage() {
     orcamento: "",
   });
 
+  useEffect(() => {
+    (async () => {
+      try {
+        const res = await fetch(`/api/projetos/${id}`);
+        const data = await res.json();
+        setForm((prev) => ({ ...prev, ...data }));
+      } catch {
+        alert("Erro ao carregar projeto.");
+      } finally {
+        setLoading(false);
+      }
+    })();
+  }, [id]);
+
   const onChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) =>
     setForm({ ...form, [e.target.name]: e.target.value });
 
@@ -30,13 +49,13 @@ export default function NovoProjetoPage() {
     e.preventDefault();
     setSaving(true);
     try {
-      const res = await fetch("/api/projetos", {
-        method: "POST",
+      const res = await fetch(`/api/projetos/${id}`, {
+        method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
       });
       if (res.ok) router.push("/projetos");
-      else alert("Erro ao salvar projeto.");
+      else alert("Erro ao atualizar projeto.");
     } catch {
       alert("Erro de conexão.");
     } finally {
@@ -44,25 +63,27 @@ export default function NovoProjetoPage() {
     }
   };
 
+  if (loading) return <div className="p-10 text-center text-gray-400">Carregando dados...</div>;
+
   return (
     <div className="max-w-[900px] mx-auto">
       <h1 className="text-3xl font-extrabold bg-gradient-to-r from-yellow-400 to-amber-300 bg-clip-text text-transparent mb-8">
-        Novo Projeto
+        Editar Projeto {form.id}
       </h1>
 
       <form onSubmit={onSave} className="glass-card border border-amber-200/10 p-6 space-y-6">
         <div className="grid sm:grid-cols-2 gap-4">
           <div>
             <label className="text-sm">Nome do projeto</label>
-            <input name="nome" value={form.nome} onChange={onChange} className="input" placeholder="Ex.: Identidade Visual – Cliente X" required />
+            <input name="nome" value={form.nome} onChange={onChange} className="input" required />
           </div>
           <div>
             <label className="text-sm">Cliente</label>
-            <input name="cliente" value={form.cliente} onChange={onChange} className="input" placeholder="Cliente" required />
+            <input name="cliente" value={form.cliente} onChange={onChange} className="input" required />
           </div>
           <div>
             <label className="text-sm">Prazo</label>
-            <input name="prazo" value={form.prazo} onChange={onChange} className="input" placeholder="dd/mm/aaaa" />
+            <input name="prazo" value={form.prazo} onChange={onChange} className="input" />
           </div>
           <div>
             <label className="text-sm">Status</label>
@@ -107,11 +128,11 @@ export default function NovoProjetoPage() {
         </div>
 
         <div className="flex flex-col sm:flex-row justify-between items-center sm:items-end gap-4 mt-6">
-          <button type="button" onClick={() => history.back()} className="w-full sm:w-32 text-sm text-gray-400 hover:text-gray-200 transition">
+          <button type="button" onClick={() => router.back()} className="w-full sm:w-32 text-sm text-gray-400 hover:text-gray-200 transition">
             ← Voltar
           </button>
           <button type="submit" disabled={saving} className={`w-full sm:w-48 h-11 rounded-lg font-semibold text-black transition ${saving ? "bg-amber-400/60 cursor-not-allowed" : "bg-amber-400 hover:bg-amber-300"}`}>
-            {saving ? "Salvando..." : "Salvar"}
+            {saving ? "Salvando..." : "Salvar alterações"}
           </button>
         </div>
       </form>
